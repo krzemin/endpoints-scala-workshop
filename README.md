@@ -35,7 +35,7 @@ Class `pizzastore.Repository` contains simple, in-memory implementation of pizza
 that is used in this workshop.
 
 
-### Ex 1 - API endpoints for ingredients management
+### Exercise 1 - API endpoints for ingredients management
 
 Define 3 following API endpoints:
 
@@ -46,7 +46,7 @@ Define 3 following API endpoints:
 Modify `TestClient` to make Hawai pizza ingredients update with these 3 endpoints.
 
 
-### Ex 2 - Support 404 errors correctly
+### Exercise 2 - Support 404 errors correctly
 
 Note that trying to access pizza by non-existing `id`, the exception will be thrown.
 This is because `pizzastore.Repository` has some defect. You need to fix this defect, but the fix
@@ -67,7 +67,7 @@ non-existing pizzas, client returns `None`.
 What about OpenAPI documentation?
 
 
-### Ex 3 - validation algebra
+### Exercise 3 - Validation algebra
 
 Ok, let's add few requirements to our API. Adding or updating pizza with empty name is not nice.
 Similarly, we shouldn't allow pizzas with empty ingredients list to be present in our store. Let's add
@@ -103,7 +103,7 @@ Write the test using generated client, that verifies your validation. Make sure
 the documentation is aligned, so that it mentions 422 code as validation error.
 
 
-### Ex 4 - authentication
+### Exercise 4 - Authentication
 
 It's time to secure our API!
 
