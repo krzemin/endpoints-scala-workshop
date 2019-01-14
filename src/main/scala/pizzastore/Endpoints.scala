@@ -28,4 +28,22 @@ trait Endpoints
     emptyResponse(docs = Some("Pizza deleted"))
   )
 
+  def getIngredients: Endpoint[Int, List[String]] = endpoint(
+    get(path / "pizzas" / segment[Int](name = "id") / "ingredients"),
+    jsonResponse[List[String]](docs = Some("List of specified pizza ingredients"))
+  )
+
+  def putIngredient: Endpoint[(Int, String), Unit] = endpoint(
+    put(
+      path / "pizzas" / segment[Int](name = "id") / "ingredients",
+      jsonRequest[String](docs = Some("Ingredient name"))
+    ),
+    emptyResponse(docs = Some("Pizza ingredient upserted"))
+  )
+
+  def deleteIngredient: Endpoint[(Int, String), Unit] = endpoint(
+    delete(path / "pizzas" / segment[Int](name = "id") / "ingredients" / segment[String](name = "ingredient")),
+    emptyResponse(docs = Some("Ingredient removed"))
+  )
+
 }

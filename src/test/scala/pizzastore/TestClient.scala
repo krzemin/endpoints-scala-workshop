@@ -27,15 +27,19 @@ object TestClient extends App {
   println("Adding Salami...")
   client.putPizza(salamiPizza)
 
-  val hawaii = client.getPizza(3)
-  val upgradedHawaii = hawaii.copy(ingredients =
-    hawaii.ingredients.map { ingredient =>
-      if(ingredient == "cheese") "onion" else ingredient
-    }
-  )
+//  val hawaii = client.getPizza(3)
+//  val upgradedHawaii = hawaii.copy(ingredients =
+//    hawaii.ingredients.map { ingredient =>
+//      if(ingredient == "cheese") "onion" else ingredient
+//    }
+//  )
 
   println("Upgrading Hawaii")
-  client.putPizza(upgradedHawaii)
+//  client.putPizza(upgradedHawaii)
+
+  client.deleteIngredient((3, "cheese"))
+  client.putIngredient((3, "onion"))
+
 
   println("Deleting Capricciosa")
   client.deletePizza(2)

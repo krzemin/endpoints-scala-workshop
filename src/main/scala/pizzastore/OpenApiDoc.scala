@@ -20,7 +20,10 @@ object OpenApiDoc
     listPizzas,
     getPizza,
     putPizza,
-    deletePizza
+    deletePizza,
+    getIngredients,
+    putIngredient,
+    deleteIngredient
   )
 
   def openapiJson: Json =
