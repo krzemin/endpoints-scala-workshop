@@ -74,7 +74,6 @@ class AkkaServerRoutes(repository: Repository)
       }
     }
 
-  // akka-http server Validation interpreter -> ideally should live in a separate trait
   def validated[A](response: A => Route, invalidDocs: Documentation): Either[List[String], A] => Route = {
     case Left(errors) =>
       complete(StatusCodes.UnprocessableEntity -> errors)
