@@ -11,8 +11,8 @@ class Repository(initialMenu: List[Pizza]) {
     menu.values.toList.sortBy(_.id)
   }
 
-  def findPizzaById(id: Int): Pizza = {
-    menu(id)
+  def findPizzaById(id: Int): Option[Pizza] = {
+    menu.get(id)
   }
 
   def upsertPizza(pizza: Pizza): Unit = {

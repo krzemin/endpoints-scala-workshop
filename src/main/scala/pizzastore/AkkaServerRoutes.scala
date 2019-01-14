@@ -33,26 +33,27 @@ class AkkaServerRoutes(repository: Repository)
 
   def getIngredientsRoute: Route =
     getIngredients.implementedBy { id =>
-      repository.findPizzaById(id).ingredients
+      repository.findPizzaById(id).map(_.ingredients)
     }
 
   def putIngredientRoute: Route =
     putIngredient.implementedBy { case (id, ingredient) =>
-      val pizza = repository.findPizzaById(id)
-
-      if(!pizza.ingredients.contains(ingredient)) {
-        val newIngredients = pizza.ingredients :+ ingredient
-        val newPizza = pizza.copy(ingredients = newIngredients)
-        repository.upsertPizza(newPizza)
+      repository.findPizzaById(id).map { pizza =>
+        if(!pizza.ingredients.contains(ingredient)) {
+          val newIngredients = pizza.ingredients :+ ingredient
+          val newPizza = pizza.copy(ingredients = newIngredients)
+          repository.upsertPizza(newPizza)
+        }
       }
     }
 
   def deleteIngredientRoute: Route =
     deleteIngredient.implementedBy { case (id, ingredient) =>
-      val pizza = repository.findPizzaById(id)
-      val newIngredients = pizza.ingredients.filterNot(_ == ingredient)
-      val newPizza = pizza.copy(ingredients = newIngredients)
-      repository.upsertPizza(newPizza)
+      repository.findPizzaById(id).map { pizza =>
+        val newIngredients = pizza.ingredients.filterNot(_ == ingredient)
+        val newPizza = pizza.copy(ingredients = newIngredients)
+        repository.upsertPizza(newPizza)
+      }
     }
 
 }

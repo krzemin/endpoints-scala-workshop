@@ -13,9 +13,10 @@ trait Endpoints
     jsonResponse[List[Pizza]](docs = Some("List of available Pizzas in menu")),
   )
 
-  def getPizza: Endpoint[Int, Pizza] = endpoint(
+  def getPizza: Endpoint[Int, Option[Pizza]] = endpoint(
     get(path / "pizzas" / segment[Int](name = "id")),
-    jsonResponse[Pizza](docs = Some("Pizza found by id")),
+    jsonResponse[Pizza](docs = Some("Pizza found by id"))
+      .orNotFound(Some("Pizza not found")),
   )
 
   def putPizza: Endpoint[Pizza, Unit] = endpoint(
@@ -28,22 +29,25 @@ trait Endpoints
     emptyResponse(docs = Some("Pizza deleted"))
   )
 
-  def getIngredients: Endpoint[Int, List[String]] = endpoint(
+  def getIngredients: Endpoint[Int, Option[List[String]]] = endpoint(
     get(path / "pizzas" / segment[Int](name = "id") / "ingredients"),
     jsonResponse[List[String]](docs = Some("List of specified pizza ingredients"))
+      .orNotFound(Some("Pizza not found"))
   )
 
-  def putIngredient: Endpoint[(Int, String), Unit] = endpoint(
+  def putIngredient: Endpoint[(Int, String), Option[Unit]] = endpoint(
     put(
       path / "pizzas" / segment[Int](name = "id") / "ingredients",
       jsonRequest[String](docs = Some("Ingredient name"))
     ),
     emptyResponse(docs = Some("Pizza ingredient upserted"))
+      .orNotFound(Some("Pizza not found"))
   )
 
-  def deleteIngredient: Endpoint[(Int, String), Unit] = endpoint(
+  def deleteIngredient: Endpoint[(Int, String), Option[Unit]] = endpoint(
     delete(path / "pizzas" / segment[Int](name = "id") / "ingredients" / segment[String](name = "ingredient")),
     emptyResponse(docs = Some("Ingredient removed"))
+      .orNotFound(Some("Pizza not found"))
   )
 
 }

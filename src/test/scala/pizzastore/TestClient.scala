@@ -47,4 +47,8 @@ object TestClient extends App {
   println("---")
   println("Available pizzas (after changes):")
   client.listPizzas(()).foreach(println)
+
+  print("Trying out non-existing pizza...")
+  println("returns " + client.getPizza(999))
+
 }
