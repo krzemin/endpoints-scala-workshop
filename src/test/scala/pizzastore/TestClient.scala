@@ -1,12 +1,15 @@
 package pizzastore
 
 import com.softwaremill.sttp.{HttpURLConnectionBackend, Id}
+import endpoints.algebra.BasicAuthentication.Credentials
 import pizzastore.model._
 
 object TestClient extends App {
 
   val sttpBackend = HttpURLConnectionBackend()
   val client = new SttpClient[Id]("http://localhost:5000", sttpBackend)
+
+  val validCredentials = Credentials("pizzaman", "secret")
 
   println("Available pizzas:")
   client.listPizzas(()).foreach(println)
@@ -25,12 +28,12 @@ object TestClient extends App {
   )
 
   println("Trying invalid pizza upserts...")
-  println(client.putPizza(salamiPizza.copy(name = "")))
-  println(client.putPizza(salamiPizza.copy(ingredients = Nil)))
-  println(client.putPizza(salamiPizza.copy(name = "", ingredients = Nil)))
+  println(client.putPizza(salamiPizza.copy(name = ""), validCredentials))
+  println(client.putPizza(salamiPizza.copy(ingredients = Nil), validCredentials))
+  println(client.putPizza(salamiPizza.copy(name = "", ingredients = Nil), validCredentials))
 
   println("Trying to remove the only ingredient from Margherita")
-  println(client.deleteIngredient((1, "cheese")))
+  println(client.deleteIngredient(1, "cheese", validCredentials))
 
   println("Adding Salami...")
 //  client.putPizza(salamiPizza)
@@ -45,12 +48,12 @@ object TestClient extends App {
   println("Upgrading Hawaii")
 //  client.putPizza(upgradedHawaii)
 
-  client.deleteIngredient((3, "cheese"))
-  client.putIngredient((3, "onion"))
+  client.deleteIngredient(3, "cheese", validCredentials)
+  client.putIngredient(3, "onion", validCredentials)
 
 
   println("Deleting Capricciosa")
-  client.deletePizza(2)
+  client.deletePizza(2, validCredentials)
 
   println("---")
   println("Available pizzas (after changes):")
@@ -58,5 +61,8 @@ object TestClient extends App {
 
   print("Trying out non-existing pizza...")
   println("returns " + client.getPizza(999))
+
+  print("Trying out without valid credentials...")
+  println("returns " + client.deletePizza(1, Credentials("foo", "bar")))
 
 }

@@ -15,7 +15,8 @@ import OpenApiEncoder.JsonSchema._
 object OpenApiDoc
   extends Endpoints
     with openapi.Endpoints
-    with openapi.JsonSchemaEntities {
+    with openapi.JsonSchemaEntities
+    with openapi.BasicAuthentication {
 
   def openapi: OpenApi = openApi(Info("Pizza Store", "1.0.0"))(
     listPizzas,
