@@ -1,7 +1,8 @@
 package pizzastore
 
+import endpoints.algebra.Documentation
 import endpoints.openapi
-import endpoints.openapi.model.{Info, OpenApi}
+import endpoints.openapi.model.{Info, MediaType, OpenApi, Schema}
 import io.circe.Json
 import io.circe.syntax._
 
@@ -28,4 +29,19 @@ object OpenApiDoc
 
   def openapiJson: Json =
     openapi.asJson
+
+  // openapi Validation interpreter -> ideally should live in a separate trait
+  def validated[A](response: List[OpenApiDoc.DocumentedResponse], invalidDocs: Documentation): List[OpenApiDoc.DocumentedResponse] =
+    response :+ OpenApiDoc.DocumentedResponse(
+      status = 422,
+      documentation = invalidDocs.getOrElse(""),
+      content = Map(
+        "application/json" -> MediaType(schema = Some(
+          Schema.Array(
+            Schema.simpleString,
+            description = Some("validation error messages")
+          )
+        ))
+      )
+    )
 }

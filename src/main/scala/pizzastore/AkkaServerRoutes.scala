@@ -1,8 +1,11 @@
 package pizzastore
 
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import endpoints.akkahttp
+import endpoints.algebra.Documentation
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
 class AkkaServerRoutes(repository: Repository)
   extends pizzastore.Endpoints
@@ -26,7 +29,18 @@ class AkkaServerRoutes(repository: Repository)
     getPizza.implementedBy(repository.findPizzaById)
 
   def putPizzaRoute: Route =
-    putPizza.implementedBy(repository.upsertPizza)
+    putPizza.implementedBy { pizza =>
+
+      val nameValidation = if(pizza.name.trim.isEmpty) List("name is empty!") else Nil
+      val ingredientsValidation = if(pizza.ingredients.isEmpty) List("ingredients list is empty!") else Nil
+
+      nameValidation ++ ingredientsValidation match {
+        case Nil =>
+          Right(repository.upsertPizza(pizza))
+        case errors =>
+          Left(errors)
+      }
+    }
 
   def deletePizzaRoute: Route =
     deletePizza.implementedBy(repository.deletePizzaById)
@@ -51,9 +65,21 @@ class AkkaServerRoutes(repository: Repository)
     deleteIngredient.implementedBy { case (id, ingredient) =>
       repository.findPizzaById(id).map { pizza =>
         val newIngredients = pizza.ingredients.filterNot(_ == ingredient)
-        val newPizza = pizza.copy(ingredients = newIngredients)
-        repository.upsertPizza(newPizza)
+        if(newIngredients.isEmpty) {
+          Left(List("Can't delete single pizza ingredient!"))
+        } else {
+          val newPizza = pizza.copy(ingredients = newIngredients)
+          Right(repository.upsertPizza(newPizza))
+        }
       }
     }
 
+  // akka-http server Validation interpreter -> ideally should live in a separate trait
+  def validated[A](response: A => Route, invalidDocs: Documentation): Either[List[String], A] => Route = {
+    case Left(errors) =>
+      complete(StatusCodes.UnprocessableEntity -> errors)
+
+    case Right(success) =>
+      response(success)
+  }
 }

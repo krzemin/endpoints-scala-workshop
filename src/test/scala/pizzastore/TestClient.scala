@@ -24,8 +24,16 @@ object TestClient extends App {
     )
   )
 
+  println("Trying invalid pizza upserts...")
+  println(client.putPizza(salamiPizza.copy(name = "")))
+  println(client.putPizza(salamiPizza.copy(ingredients = Nil)))
+  println(client.putPizza(salamiPizza.copy(name = "", ingredients = Nil)))
+
+  println("Trying to remove the only ingredient from Margherita")
+  println(client.deleteIngredient((1, "cheese")))
+
   println("Adding Salami...")
-  client.putPizza(salamiPizza)
+//  client.putPizza(salamiPizza)
 
 //  val hawaii = client.getPizza(3)
 //  val upgradedHawaii = hawaii.copy(ingredients =

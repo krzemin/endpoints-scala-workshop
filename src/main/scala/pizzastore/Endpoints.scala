@@ -6,7 +6,8 @@ import pizzastore.model._
 trait Endpoints
   extends algebra.Endpoints
     with algebra.JsonSchemaEntities
-    with JsonSchemas {
+    with JsonSchemas
+    with Validation {
 
   def listPizzas: Endpoint[Unit, List[Pizza]] = endpoint(
     get(path / "pizzas"),
@@ -19,9 +20,12 @@ trait Endpoints
       .orNotFound(Some("Pizza not found")),
   )
 
-  def putPizza: Endpoint[Pizza, Unit] = endpoint(
+  def putPizza: Endpoint[Pizza, Either[List[String], Unit]] = endpoint(
     put(path / "pizzas", jsonRequest[Pizza](docs = Some("Pizza"))),
-    emptyResponse(docs = Some("Pizza upserted"))
+    validated(
+      emptyResponse(docs = Some("Pizza upserted")),
+      invalidDocs = Some("Can't update - invalid entity!")
+    )
   )
 
   def deletePizza: Endpoint[Int, Unit] = endpoint(
@@ -44,9 +48,12 @@ trait Endpoints
       .orNotFound(Some("Pizza not found"))
   )
 
-  def deleteIngredient: Endpoint[(Int, String), Option[Unit]] = endpoint(
+  def deleteIngredient: Endpoint[(Int, String), Option[Either[List[String], Unit]]] = endpoint(
     delete(path / "pizzas" / segment[Int](name = "id") / "ingredients" / segment[String](name = "ingredient")),
-    emptyResponse(docs = Some("Ingredient removed"))
+    validated(
+      emptyResponse(docs = Some("Ingredient removed")),
+      invalidDocs = Some("Can't delete single ingredient")
+    )
       .orNotFound(Some("Pizza not found"))
   )
 
