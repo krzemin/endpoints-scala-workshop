@@ -5,6 +5,7 @@ There are few exercises in this repository that aims to
 get you familiar with Scala [endpoints](http://julienrf.github.io/endpoints/)
 library.
 
+Presentation is at https://docs.google.com/presentation/d/19ob9ZYwtm6qM5Jwg_AXHY-VGjW-DXjAHPStDvuLuyW4/edit#slide=id.p
 
 ### Pizza Store
 
@@ -33,6 +34,16 @@ case class Price(amount: BigDecimal,
 
 Class `pizzastore.Repository` contains simple, in-memory implementation of pizza menu
 that is used in this workshop.
+
+In this repository you will also find a simple 
+
+#### Running server and test client
+
+In order to run the server, you need to invoke `sbt run`. Api and documentation (previewed with swagger ui)
+should be available at http://localhost:5000.
+
+In order to run the [test client example program](src/test/scala/pizzastore/TestClient.scala), you need to
+have server that is up. Then invoke `sbt test:run` to execute test program against the server.
 
 
 ### Exercise 1 - API endpoints for ingredients management
@@ -115,3 +126,7 @@ As usually:
 - make sure that you write test that invokes secured endpoints without
   credentials and you get appropriate http status code
 - make sure the docs reflect security mechanism for secured endpoints
+
+### Solutions
+
+If you stuck at some exercise or want to see my solution, you can view it on `exercise-n` branch.
