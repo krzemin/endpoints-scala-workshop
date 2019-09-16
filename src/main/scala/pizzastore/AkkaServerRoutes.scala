@@ -50,7 +50,7 @@ class AkkaServerRoutes(repository: Repository)
   def deleteIngredientRoute: Route =
     deleteIngredient.implementedBy { case (id, ingredient) =>
       val pizza = repository.findPizzaById(id)
-      val newIngredients = pizza.ingredients.filter(_ == ingredient)
+      val newIngredients = pizza.ingredients.filterNot(_ == ingredient)
       val newPizza = pizza.copy(ingredients = newIngredients)
       repository.upsertPizza(newPizza)
     }
