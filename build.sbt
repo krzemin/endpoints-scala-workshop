@@ -3,7 +3,7 @@ name := "endpoints-scala-workshop"
 
 version := "1.0.0"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.10"
 
 val endpointsVersion = "0.10.1"
 val akkaVersion = "2.5.25"
