@@ -7,7 +7,7 @@ import endpoints.akkahttp
 class AkkaServerRoutes(repository: Repository)
   extends pizzastore.Endpoints
   with akkahttp.server.Endpoints
-  with akkahttp.server.JsonSchemaEntities {
+  with akkahttp.server.circe.JsonSchemaEntities {
 
   val route: Route = concat(
     listPizzasRoute,

@@ -5,6 +5,12 @@ import endpoints.openapi.model.{Info, OpenApi}
 import io.circe.Json
 import io.circe.syntax._
 
+object OpenApiEncoder
+  extends endpoints.openapi.model.OpenApiSchemas
+    with endpoints.circe.JsonSchemas
+
+import OpenApiEncoder.JsonSchema._
+
 object OpenApiDoc
   extends Endpoints
     with openapi.Endpoints
