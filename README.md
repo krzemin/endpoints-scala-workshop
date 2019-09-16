@@ -35,8 +35,6 @@ case class Price(amount: BigDecimal,
 Class `pizzastore.Repository` contains simple, in-memory implementation of pizza menu
 that is used in this workshop.
 
-In this repository you will also find a simple 
-
 #### Running server and test client
 
 In order to run the server, you need to invoke `sbt run`. Api and documentation (previewed with swagger ui)
